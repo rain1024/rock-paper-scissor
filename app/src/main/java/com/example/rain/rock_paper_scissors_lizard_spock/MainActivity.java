@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,8 +61,10 @@ public class MainActivity extends AppCompatActivity {
         images.put("Rock", R.mipmap.rock);
         images.put("Scissor", R.mipmap.scissor);
         images.put("Paper", R.mipmap.paper);
-        ImageButton button = (ImageButton)findViewById(R.id.imageComputer);
-        button.setImageResource(images.get(this.computer.getChoice()));
+        ImageView imageComputer = (ImageView) findViewById(R.id.imageComputer);
+        imageComputer.setImageResource(images.get(this.computer.getChoice()));
+        ImageView imageUser = (ImageView) findViewById(R.id.imageUser);
+        imageUser.setImageResource(images.get(this.user.getChoice()));
 
         ((TextView)findViewById(R.id.textUserPoint)).setText(String.valueOf(this.user.getPoint()));
         ((TextView)findViewById(R.id.textComputerPoint)).setText(String.valueOf(this.computer.getPoint()));
@@ -95,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
         String computerChoice = this.computer.getChoice();
 
         if(userChoice == computerChoice){
-            this.result = "Draw";
+            this.result = "Draw!";
         } else if(rules.get(userChoice) == computerChoice){
-           this.result = "Win";
+           this.result = "Win!";
             this.user.addPoint();
         } else {
-            this.result = "Lose";
+            this.result = "Lose!";
             this.computer.addPoint();
         }
         this.updateUI();
