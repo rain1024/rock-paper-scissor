@@ -19,10 +19,9 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String userChoice;
-    public String computerChoice;
-    public int userPoint = 0;
-    public int computerPoint = 0;
+    public ComputerPlayer computer;
+    public UserPlayer user;
+    public String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.user = new UserPlayer();
+        this.computer = new ComputerPlayer();
     }
 
     @Override
@@ -53,54 +54,55 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public String choose(){
-        List<String> options = new ArrayList<String>();
-        options.add("Rock");
-        options.add("Paper");
-        options.add("Scissor");
-        int index = (new Random()).nextInt(3);
-        int[] images = new int[3];
-        images[0] = R.mipmap.rock;
-        images[1] = R.mipmap.paper;
-        images[2] = R.mipmap.scissor;
+
+    public void updateUI(){
+        Map<String, Integer> images = new HashMap<String, Integer>();
+        images.put("Rock", R.mipmap.rock);
+        images.put("Scissor", R.mipmap.scissor);
+        images.put("Paper", R.mipmap.paper);
         ImageButton button = (ImageButton)findViewById(R.id.imageComputer);
-        button.setImageResource(images[index]);
-        return options.get(index);
+        button.setImageResource(images.get(this.computer.getChoice()));
+
+        ((TextView)findViewById(R.id.textUserPoint)).setText(String.valueOf(this.user.getPoint()));
+        ((TextView)findViewById(R.id.textComputerPoint)).setText(String.valueOf(this.computer.getPoint()));
+        ((TextView)findViewById(R.id.textResult)).setText(result);
+
     }
+
     public void chooseRock(View v){
-        this.userChoice = "Rock";
+        this.user.setChoice("Rock");
         this.play();
     }
 
     public void choosePaper(View v){
-        this.userChoice = "Paper";
+        this.user.setChoice("Paper");
         this.play();
     }
 
     public void chooseScissor(View v){
-        this.userChoice = "Scissor";
+        this.user.setChoice("Scissor");
         this.play();
     }
 
     public void play(){
-        String userChoice = this.userChoice;
-        String computerChoice = this.choose();
-        String result = "";
+        this.computer.play();
         Map<String, String> rules = new HashMap<String, String>();
         rules.put("Rock", "Scissor");
         rules.put("Scissor", "Paper");
         rules.put("Paper", "Rock");
+
+        String userChoice = this.user.getChoice();
+        String computerChoice = this.computer.getChoice();
+
         if(userChoice == computerChoice){
-            result = "Draw";
+            this.result = "Draw";
         } else if(rules.get(userChoice) == computerChoice){
-           result = "Win";
-            this.userPoint += 1;
+           this.result = "Win";
+            this.user.addPoint();
         } else {
-            result = "Lose";
-            this.computerPoint += 1;
+            this.result = "Lose";
+            this.computer.addPoint();
         }
-        ((TextView)findViewById(R.id.textUserPoint)).setText(String.valueOf(this.userPoint));
-        ((TextView)findViewById(R.id.textComputerPoint)).setText(String.valueOf(this.computerPoint));
-        ((TextView)findViewById(R.id.textResult)).setText(result);
+        this.updateUI();
     }
 }
